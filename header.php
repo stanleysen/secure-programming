@@ -1,9 +1,6 @@
 <header class="header">
 
    <div class="header-1">
-      <div class="flex">
-         <p><a href="login.php">Login</a> | <a href="register.php">Register</a> </p>
-      </div>
    </div>
 
    <div class="header-2">
