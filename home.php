@@ -60,7 +60,7 @@ if(isset($_POST['add_to_cart'])){
 
    <div class="content">
       <h3>Toko Buku NyamNyam AOL SecProg</h3>
-      <p>Database ini terdapat 4 table yaitu cart, orders, products, dan users. Kita terinspirasi dari Tokopedia, namun bertemakan satu kategori saja yaitu buku.</p>
+      <p>ga tau mau nulis apa tigor ga ngasih ide buat nulis apa jadi kesimpulannya tigor yg salah</p>
    </div>
 
 </section>

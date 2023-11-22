@@ -5,7 +5,7 @@ require 'security.php';
 session_start();
 
 
-if(isset($_POST['submit'])){
+if(isset($_POST['email'])){
    // login_attempt_rate_limit($maxAttempts, $timeFrameInSeconds, $timeoutDuration);
    $email = mysqli_real_escape_string($conn, $_POST['email']);
    $pass = mysqli_real_escape_string($conn, $_POST['password']);
@@ -65,17 +65,17 @@ if(isset($_POST['submit'])){
    
 <div class="form-container">
 
-   <form action="" method="post">
+   <form action="" onsubmit="return validateForm()" method="post">
       <h3>LOG IN</h3>
-      <input type="email" name="email" placeholder="Email address" required class="box">
+      <input type="email" id="email" name="email" placeholder="Email address" required class="box">
       <input type="password" name="password" placeholder="Password" required class="box">
       <input type="submit" name="submit" value="login" class="btn" id="loginButton">
       <p>Belum punya akun? <a href="register.php">Daftar</a></p>
    </form>
 
 </div>
+<script src="js/form_validation.js"></script>
 
- 
 </body>
 </html>
 

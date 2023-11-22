@@ -16,6 +16,7 @@ if(isset($_POST['submit'])){
    $prep_state->execute();
    $select_users = $prep_state->get_result();
    
+   // validasi input dari selection user type, biar tidak ada injection
    if($user_type !== "user" && $user_type !== "admin"){
       $message[] = 'Pendaftaran gagal!';
       header('Location:register.php');
@@ -27,6 +28,11 @@ if(isset($_POST['submit'])){
       if($pass != $cpass){
          $message[] = 'Konfirmasi kata sandi tidak cocok!';
       }else{
+         //filter var buat ngecek email beneran ato engga, kalo somehow dia ngelewatin regex
+         if (!filter_var($email, FILTER_VALIDATE_EMAIL)){
+            die("Unfortunately, doing that doesn't work here :)");
+            //bingung mau diapain lagi, tambahin gini dulu aja sementara
+         }
          $query = "INSERT INTO users(name, email, password, user_type) VALUES(?, ?, ?, ?)";
          $pass = password_hash($pass, PASSWORD_DEFAULT);
          $prep_state = $conn->prepare($query);
@@ -63,11 +69,11 @@ if(isset($_POST['submit'])){
    
 <div class="form-container">
 
-   <form action="" method="post">
+   <form name="form" onsubmit="return validateForm() && validateFormPass()" method="post">
       <h3>Registrasi Sekarang</h3>
       <input type="text" name="name" placeholder="masukkan nama anda" required class="box">
-      <input type="email" name="email" placeholder="masukan email anda" required class="box">
-      <input type="password" name="password" placeholder="masukkan password" required class="box">
+      <input type="email" name="email" id="email" placeholder="masukan email anda" required class="box">
+      <input type="password" name="password" id="password" placeholder="masukkan password" required class="box">
       <input type="password" name="cpassword" placeholder="konfirmasi password" required class="box">
       <select name="user_type" class="box">
          <option value="user">user</option>
@@ -76,7 +82,7 @@ if(isset($_POST['submit'])){
       <input type="submit" name="submit" value="register now" class="btn">
       <p>Sudah memiliki akun? <a href="login.php">Log In</a></p>
    </form>
-
+   <script src="js/form_validation.js"></script>
 </div>
 
 </body>
