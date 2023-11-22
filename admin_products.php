@@ -10,45 +10,52 @@ if(!isset($admin_id)){
    header('location:login.php');
 };
 
-if(isset($_POST['add_product'])){
-
+if (isset($_POST['add_product'])) {
    $name = mysqli_real_escape_string($conn, $_POST['name']);
    $price = $_POST['price'];
    $image = $_FILES['image']['name'];
    $image_size = $_FILES['image']['size'];
    $image_tmp_name = $_FILES['image']['tmp_name'];
-   $image_folder = 'uploaded_img/'.$image;
+   $image_folder = 'uploaded_img/' . $image;
 
-   // if(!preg_match('/^[a-zA-Z0-9_]+$/', $image)){
-   //    unlink($_FILES['image']['image_tmp_name']);
-   // }
-
+   // Check if the product name already exists
    $query = "SELECT name FROM products WHERE name = ?";
    $prep_state = $conn->prepare($query);
    $prep_state->bind_param("s", $name);
    $prep_state->execute();
-   $select_product_name =$prep_state->get_result();
-   // $conn->close();
-   // $select_product_name = mysqli_query($conn, "SELECT name FROM `products` WHERE name = '$name'") or die('query failed');
-   
-   if(mysqli_num_rows($select_product_name) === 1){
-      $message[] = 'product name already added';
-   }else{
-      $add_product_query = mysqli_query($conn, "INSERT INTO `products`(name, price, image) VALUES('$name', '$price', '$image')") or die('query failed');
-      
-      if($add_product_query){
-         if($image_size > 2000000){
-            $message[] = 'image size is too large';
-         }else{
-            move_uploaded_file($image_tmp_name, $image_folder);
-            $message[] = 'produk berhasil ditambahkan!';
-         }
-      }else{
-         $message[] = 'produk gagal ditambahkan!';
-      }
+   $select_product_name = $prep_state->get_result();
+
+   if (mysqli_num_rows($select_product_name) > 0) {
+       $message[] = 'Product name already added';
+   } else {
+       // Validate file extension
+       $allowed_extensions = array('jpg', 'jpeg', 'png');
+       $image_extension = strtolower(pathinfo($image, PATHINFO_EXTENSION));
+
+       if (!in_array($image_extension, $allowed_extensions)) {
+           $message[] = 'Only JPEG, JPG, and PNG files are allowed';
+       } else {
+           // Insert new product into the database
+           $add_product_query = mysqli_query($conn, "INSERT INTO `products` (name, price, image) VALUES ('$name', '$price', '$image')");
+           if ($add_product_query) {
+               // Check if the uploaded image size is within the limit
+               if ($image_size > 2000000) {
+                   $message[] = 'Image size is too large';
+               } else {
+                   // Move the uploaded file to the destination folder
+                   if (move_uploaded_file($image_tmp_name, $image_folder)) {
+                       $message[] = 'Product successfully added!';
+                   } else {
+                       $message[] = 'Error uploading image';
+                   }
+               }
+           } else {
+               $message[] = 'Error adding product to the database';
+           }
+       }
    }
-   // $conn->close();
 }
+
 
 if(isset($_GET['delete'])){
    $delete_id = $_GET['delete'];
@@ -69,27 +76,49 @@ if(isset($_POST['update_product'])){
    $prep_state = $conn->prepare($query);
    $prep_state->bind_param("ssi", $update_name, $update_price, $update_p_id);
    $prep_state->execute();
-   // $conn->close();
 
    //mysqli_query($conn, "UPDATE `products` SET name = '$update_name', price = '$update_price' WHERE id = '$update_p_id'") or die('query failed');
-
+   // validasi file buat update
    $update_image = $_FILES['update_image']['name'];
    $update_image_tmp_name = $_FILES['update_image']['tmp_name'];
    $update_image_size = $_FILES['update_image']['size'];
    $update_folder = 'uploaded_img/'.$update_image;
    $update_old_image = $_POST['update_old_image'];
 
-  
+   $allowed_extensions = array('jpeg', 'jpg', 'png');
+   $filepath = pathinfo($update_image);
 
-   if(!empty($update_image)){
-      if($update_image_size > 2000000){
-         $message[] = 'image file size is too large';
-      }else{
-         mysqli_query($conn, "UPDATE `products` SET image = '$update_image' WHERE id = '$update_p_id'") or die('query failed');
-         move_uploaded_file($update_image_tmp_name, $update_folder);
-         unlink('uploaded_img/'.$update_old_image);
-      }
-   }
+   // $fileSize = filesize($filepath);
+   // $fileinfo = finfo_open(FILEINFO_MIME_TYPE);
+   // $filetype = finfo_file($fileinfo, $filepath);
+   // $update_image_extension = strtolower(pathinfo($update_image, PATHINFO_EXTENSION));
+   $update_image_extension = strtolower($filepath['extension']);
+
+   // $update_image_extension = pathinfo($update_image, PATHINFO_EXTENSION);
+
+   echo 'Update Image Extension: ' . $update_image_extension;  // Debug statement
+
+   // if (!in_array(strtolower($update_image_extension), $allowed_extensions)) {
+      
+   
+   if (!in_array($update_image_extension, $allowed_extensions)) {
+      //  $message[] = 'Only JPEG, JPG and PNG files are allowed.';
+      /* $jscode = 'alert("nyobain")';
+      echo '<script>'.
+         $jscode
+      .'</script>'; */
+   } else {
+       if (!empty($update_image)) {
+           if ($update_image_size > 2000000) {
+               $message[] = 'Image file size is too large.';
+           } else {
+               mysqli_query($conn, "UPDATE `products` SET image = '$update_image' WHERE id = '$update_p_id'") or die('Query failed');
+               move_uploaded_file($update_image_tmp_name, $update_folder);
+               unlink('uploaded_img/'.$update_old_image);
+           }
+       }
+}
+
 
    header('location:admin_products.php');
 
