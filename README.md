@@ -1,11 +1,11 @@
 # Secure-programming
 
 Secure-programming AOL
-- 2540130024 - Benedick Wijayaputra
-- 2540102790 - Theodore Aditya Oei
-- 2540130825 - Stanley Sen Riyanto
-- 2540131790 - Tigor Abraham Nuartha
-- 2540135196 - Valentio Bryant Yulius
+- 2540130024 - Benedick Wijayaputra[https://github.com/bene324]
+- 2540102790 - Theodore Aditya Oei[https://github.com/oeufmeister]
+- 2540130825 - Stanley Sen Riyanto[https://github.com/stanleysen]
+- 2540131790 - Tigor Abraham Nuartha[https://github.com/N1ERU]
+- 2540135196 - Valentio Bryant Yulius[https://github.com/carnike]
 
 ## How To Run on XAMPP
 1. Clone / download this repository
