@@ -11,8 +11,8 @@ if(!isset($admin_id)){
 };
 
 if (isset($_POST['add_product'])) {
-   $name = mysqli_real_escape_string($conn, $_POST['name']);
-   $price = $_POST['price'];
+   $name = htmlspecialchars(mysqli_real_escape_string($conn, $_POST['name']));
+   $price = htmlspecialchars($_POST['price']);
    $image = $_FILES['image']['name'];
    $image_size = $_FILES['image']['size'];
    $image_tmp_name = $_FILES['image']['tmp_name'];
