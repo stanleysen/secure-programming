@@ -75,14 +75,18 @@ if(isset($_GET['delete_all'])){
          $select_cart = mysqli_query($conn, "SELECT * FROM `cart` WHERE user_id = '$user_id'") or die('query failed');
          if(mysqli_num_rows($select_cart) > 0){
             while($fetch_cart = mysqli_fetch_assoc($select_cart)){   
+               // <!--change 6-->
+               $cart_token = bin2hex(random_bytes(16));
       ?>
       <div class="box">
-         <a href="cart.php?delete=<?php echo $fetch_cart['id']; ?>" class="fas fa-times" onclick="return confirm('hapus dari keranjang ?');"></a>
+      // <!--change 7-->
+         
+      <a href="cart.php?delete=<?php echo $cart_token['id']; ?>" class="fas fa-times" onclick="return confirm('hapus dari keranjang ?');"></a>
          <img src="uploaded_img/<?php echo $fetch_cart['image']; ?>" alt="">
          <div class="name"><?php echo $fetch_cart['name']; ?></div>
          <div class="price">Rp. <?php echo $fetch_cart['price']; ?>/-</div>
          <form action="" method="post">
-            <input type="hidden" name="cart_id" value="<?php echo $fetch_cart['id']; ?>">
+            <input type="hidden" name="cart_token" value="<?php echo $cart_token; ?>">
             <input type="number" min="1" name="cart_quantity" value="<?php echo $fetch_cart['quantity']; ?>">
             <input type="submit" name="update_cart" value="update" class="option-btn">
          </form>
@@ -92,7 +96,7 @@ if(isset($_GET['delete_all'])){
       $grand_total += $sub_total;
          }
       }else{
-         echo '<p class="empty">Keranjang mu kosong!</p>';
+         echo '<p class="empty">Keranjangmu kosong!</p>';
       }
       ?>
    </div>
