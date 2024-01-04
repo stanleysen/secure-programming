@@ -4,11 +4,11 @@ require 'config.php';
 
 if(isset($_POST['submit'])){
 
-   $name = mysqli_real_escape_string($conn, $_POST['name']);
-   $email = mysqli_real_escape_string($conn, $_POST['email']);
-   $pass = mysqli_real_escape_string($conn, $_POST['password']);
-   $cpass = mysqli_real_escape_string($conn, $_POST['cpassword']);
-   $user_type = $_POST['user_type'];
+   $name = htmlspecialchars(mysqli_real_escape_string($conn, $_POST['name']));
+   $email = htmlspecialchars(mysqli_real_escape_string($conn, $_POST['email']));
+   $pass = htmlspecialchars(mysqli_real_escape_string($conn, $_POST['password']));
+   $cpass = htmlspecialchars(mysqli_real_escape_string($conn, $_POST['cpassword']));
+   $user_type = htmlspecialchars($_POST['user_type']);
 
    $query = "SELECT * FROM users WHERE email = ?";
    $prep_state = $conn->prepare($query);
