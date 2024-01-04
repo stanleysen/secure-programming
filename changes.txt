@@ -57,6 +57,9 @@ kalo udah begitu
          <div class="sub-total"> sub total : <span>Rp. <?php echo $sub_total = ($fetch_cart['quantity'] * $fetch_cart['price']); ?>/-</span> </div>
       </div>
 
+(Change 8) nambahin htmlspecialchars -> xss
+    $name = htmlspecialchars(mysqli_real_escape_string($conn, $_POST['name']));
+    $price = htmlspecialchars($_POST['price']);
 
 
 
